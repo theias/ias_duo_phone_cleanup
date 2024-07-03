@@ -39,14 +39,19 @@ The script needs the keys from an Admin API application in Duo Security
 to work.  Please set this up and copy the values into the file.  You can
 use the credentials_template.ini as a template like so.
 
+```
 $ cp credentials_template.ini credentials.ini
 $ vi credentials.ini
+```
 
 Make sure you have all the required Python libraries.
 
+```
 $ pip install -r requirements.txt
+```
 
 Run the script like this
 
+```
 $ ./duo_phone_cleanup.py
-
+```
