@@ -47,6 +47,7 @@ def remove_generic_smartphone(user):
     global delete
     try:
         user_id = user['user_id']
+        username = user['username']
         phones = user['phones']
 
         for phone in phones:
@@ -56,13 +57,12 @@ def remove_generic_smartphone(user):
                 phone_created = datetime.fromtimestamp(int(phone['name'] or 0))
                 if phone['name'] == '':
                     # Update the date last seen in the name field
-                    print(f"I need to update the phone name with the date")
-                    print(f"Updating {phone['phone_id']} with now {round(datetime.timestamp(now))}")
+                    print(f"Updating {phone['phone_id']} for {username} with now {round(datetime.timestamp(now))}")
                     if delete == 1:
                         admin_api.update_phone(phone_id=phone['phone_id'], name=str(round(datetime.timestamp(now))))
                 elif phone_created < grace_period:
                     # Delete the generic smartphone entry
-                    print(f"Delete generic smartphone: {phone['phone_id']} for user {user_id}")
+                    print(f"Delete generic smartphone: {phone['phone_id']} for user {username} {user_id}")
                     print(f"Now: {now} GRACE_PERIOD_MINUTES: {grace_period_minutes}")
                     print(f"Added at: {phone_created}, Grace Period = {grace_period}")
                     if delete == 1:
