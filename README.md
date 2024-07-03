@@ -1,9 +1,7 @@
 # ias_duo_phone_cleanup
 This script will automatically clean up phones in the limbo state of "Generic Smartphone" in Duo Security.
 
-#############
-# The issue #
-#############
+# The issue
 
 If a user starts setting up a phone during the Duo registration,
 but then stops before they actually activate the phone successfully,
@@ -11,9 +9,7 @@ they will be left in a state where they cannot log in.  This can lead
 to helpdesk call and a bad user experience.  Instead, we want to remove
 any phone in this limbo state so that the user can try again later.
 
-################
-# How it works #
-################
+# How it works
 
 The script sets a grace period where a user may be actively setting up
 their smartphone.  By default this is 10 minutes.  The script is meant
@@ -37,9 +33,7 @@ we check if it is beyond the grace period.  If it is, we remove the phone.
 
 This should be safe, but YMMV, so please be careful
 
-#################
-# How to use it #
-#################
+# How to use it
 
 The script needs the keys from an Admin API application in Duo Security
 to work.  Please set this up and copy the values into the file.  You can
