@@ -3,13 +3,14 @@
 Cleanup Duo accounts.
 """
 
+import configparser
+import csv
+import duo_client
+import getopt
 import os
 import smtplib
 import sys
 import time
-import csv
-import duo_client
-import configparser
 from datetime import datetime, timedelta
 
 config = configparser.ConfigParser()
@@ -22,9 +23,11 @@ admin_api = duo_client.Admin(
     host=config['duo']['host'],
 )
 
-GRACE_PERIOD_MINUTES = 10 # minutes to allow generic smartphone
+grace_period_minutes=int(config['duo']['grace_period_minutes'])
 now = datetime.utcnow()
-grace_period = now - timedelta(minutes=GRACE_PERIOD_MINUTES)
+grace_period = now - timedelta(minutes=grace_period_minutes)
+
+delete = 0 # by default report only
 
 def get_users():
     try:
@@ -41,6 +44,7 @@ def get_phones():
         return []
 
 def remove_generic_smartphone(user):
+    global delete
     try:
         user_id = user['user_id']
         phones = user['phones']
@@ -54,17 +58,51 @@ def remove_generic_smartphone(user):
                     # Update the date last seen in the name field
                     print(f"I need to update the phone name with the date")
                     print(f"Updating {phone['phone_id']} with now {round(datetime.timestamp(now))}")
-                    admin_api.update_phone(phone_id=phone['phone_id'], name=str(round(datetime.timestamp(now))))
+                    if delete == 1:
+                        admin_api.update_phone(phone_id=phone['phone_id'], name=str(round(datetime.timestamp(now))))
                 elif phone_created < grace_period:
                     # Delete the generic smartphone entry
                     print(f"Delete generic smartphone: {phone['phone_id']} for user {user_id}")
-                    print(f"Now: {now} GRACE_PERIOD_MINUTES: {GRACE_PERIOD_MINUTES}")
+                    print(f"Now: {now} GRACE_PERIOD_MINUTES: {grace_period_minutes}")
                     print(f"Added at: {phone_created}, Grace Period = {grace_period}")
-                    admin_api.delete_phone(phone['phone_id'])
+                    if delete == 1:
+                        admin_api.delete_phone(phone['phone_id'])
     except Exception as e:
         print(f"Error: {str(e)}")
 
-# Retrieve user info from API:
-users = get_users()
-for user in users:
-    remove_generic_smartphone(user)
+def main(argv):
+    global delete
+    global grace_period_minutes
+    global grace_period
+    foruser = ""
+    try:
+        opts, args = getopt.getopt(argv[1:],"dg:u:")
+    except getopt.GetoptError:
+        print(f"{argv[0]} [-d] [-u username]")
+        sys.exit(2)
+    for opt, arg in opts:
+        if opt == '-d':
+            delete = 1
+        if opt == '-u':
+            foruser = arg
+        if opt == '-g':
+            grace_period_minutes = int(arg)
+            grace_period = now - timedelta(minutes=grace_period_minutes)
+            print(f"Grace period set to {grace_period_minutes} minutes")
+
+    if delete == 1:
+        print(f"Delete option is active")
+    else:
+        print(f"Delete option is not active")
+
+    if foruser != '':
+        print(f"Operating only for user {foruser}")
+
+    # Retrieve user info from API:
+    users = get_users()
+    for user in users:
+        if foruser == '' or user['username'] == foruser:
+            remove_generic_smartphone(user)
+
+if __name__ == "__main__":
+    main(sys.argv)
