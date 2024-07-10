@@ -91,9 +91,9 @@ def main(argv):
             print(f"Grace period set to {grace_period_minutes} minutes")
 
     if delete == 1:
-        print(f"Delete option is active")
+        print(f"{now} Delete option is active")
     else:
-        print(f"Delete option is not active")
+        print(f"{now} Delete option is not active")
 
     if foruser != '':
         print(f"Operating only for user {foruser}")
