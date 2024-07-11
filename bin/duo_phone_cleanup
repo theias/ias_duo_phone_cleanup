@@ -1,0 +1,4 @@
+#!/usr/bin/env python3
+
+from duo_phone_cleanup import __main__
+__main__.main()
