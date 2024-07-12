@@ -223,7 +223,7 @@ class Duo:
         Remove a phone if its timestamp is old enough, else create the timestamp
 
         Optionally will call specified `pre_test(`prompt`) before making any actual
-        writes or deletes, and raise an exception if it returns falsey
+        writes or deletes, and skip the operation if it returns falsey
         """
         created_time = datetime.fromtimestamp(int(phone[PHONE_TIMESTAMP_KEY] or 0))
         logging.debug(
@@ -263,11 +263,8 @@ class Duo:
             )
             self.api.delete_phone(phone["phone_id"])
         else:
-            logging.info(
-                (
-                    "Timestamp not old enough to be deleted yet, taking no action on "
-                    "phone for the user `%s` with id `%s`"
-                ),
+            logging.debug(
+                ("Taking no action on phone for the user `%s` with id `%s`"),
                 phone["username"],
                 phone["phone_id"],
             )
@@ -291,7 +288,6 @@ def user_verify(prompt) -> str:
 def main(
     argv,
 ) -> None:
-
     """main"""
     args = parse_args(argv)
     logging.debug("Argparse results: %s", args)

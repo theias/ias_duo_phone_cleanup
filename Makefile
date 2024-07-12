@@ -30,6 +30,7 @@ static-analysis: $(DEPENDENCIES)
 	black --check duo_phone_cleanup/ tests/
 	# Check json validity
 	python3 -m json.tool < tests/*.json >/dev/null
+	# Hooray all good
 
 .PHONY: test
 test: $(DEPENDENCIES)

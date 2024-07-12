@@ -1,4 +1,8 @@
-""" tests """
+"""
+Test end-to-end functionality with a parameterized list of inputs and expected results
+
+mock the bits of the Duo API that get touched by our script and verify the results
+"""
 # pylint: disable=global-statement
 
 import json
