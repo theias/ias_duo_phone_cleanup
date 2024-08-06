@@ -157,18 +157,6 @@ def parse_args(argv=None) -> argparse.Namespace:
     return args
 
 
-# def credentials_from_file() -> dict:
-#     """Ingest credentials from ini file"""
-#     config = configparser.ConfigParser()
-#     config.read("credentials.ini")
-#     return {
-#         "grace_period_minutes": int(config["duo"]["grace_period_minutes"]),
-#         "now": datetime.utcnow(),
-#         "grace_period": datetime.utcnow()
-#         - timedelta(minutes=config["duo"]["grace_period_minutes"]),
-#     }
-
-
 # pylint: disable=too-few-public-methods
 class Duo:
     """
