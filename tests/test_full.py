@@ -187,6 +187,26 @@ def mock_delete_phone(_, phone_id: str) -> Any:
             },
         ),
     ],
+    ids=[
+        "Operate on all phones with platform `Generic Smartphone`",
+        (
+            "Operate on all phones with platform `Generic Smartphone * BUT require "
+            "user input for each write/delete action (no `--no-force`) - mocking of "
+            "user input is arranged in the test itself"
+        ),
+        (
+            "Specify one user with a 'Generic Smartphone' with no timestamp. Should "
+            "update the device. No others should be operated upon"
+        ),
+        (
+            "Specify one user with a 'Generic Smartphone' to be deleted. No others "
+            "should be operated upon"
+        ),
+        (
+            "Specify multiple users with a 'Generic Smartphone' to be deleted. Only "
+            "those should be operated upon"
+        ),
+    ],
 )
 def test_end_to_end(monkeypatch, test_input, expected):
     """Test"""
