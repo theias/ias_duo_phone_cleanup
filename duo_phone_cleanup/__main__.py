@@ -151,9 +151,9 @@ def parse_args(argv=None) -> argparse.Namespace:
         log_level = logging.WARNING
 
     logging.basicConfig(
-        format='%(asctime)s,%(levelname)s,%(message)s',
+        format="%(asctime)s,%(levelname)s,%(message)s",
         level=log_level,
-        datefmt='%Y-%m-%d %H:%M:%S'
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
     return args
