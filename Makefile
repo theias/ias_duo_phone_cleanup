@@ -29,7 +29,7 @@ static-analysis: $(DEPENDENCIES)
 	# Check style
 	black --check duo_phone_cleanup/ tests/
 	# Check json validity
-	./venv/bin/python3 -m json.tool < tests/*.json >/dev/null
+	./venv/bin/python3 -m json.tool < tests/users.json >/dev/null
 	# Hooray all good
 
 .PHONY: test
@@ -40,6 +40,7 @@ test: $(DEPENDENCIES)
 test-verbose: $(DEPENDENCIES)
 	pytest  -rP --log-cli-level=10 tests/
 
+.PHONY: fix
 fix: $(DEPENDENCIES)
 	# Enforce style with Black
 	black duo_phone_cleanup/
