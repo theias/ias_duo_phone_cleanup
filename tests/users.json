@@ -1,0 +1,57 @@
+[
+  {
+    "phones": [
+      {
+        "name": "",
+        "phone_id": "barret_phone_1",
+        "platform": "Generic Smartphone"
+      }
+    ],
+    "user_id": "NPD6FL3RED76C6UZXFWG",
+    "username": "barret"
+  },
+  {
+    "phones": [
+      {
+        "name": "1",
+        "phone_id": "cloud_phone_1",
+        "platform": "Generic Smartphone"
+      }
+    ],
+    "user_id": "SLHNGL82G9AAMUP4MZ7F",
+    "username": "cloud"
+  },
+  {
+    "phones": [
+      {
+        "name": "2",
+        "phone_id": "sephiroth_phone_1",
+        "platform": "Generic Smartphone"
+      }
+    ],
+    "user_id": "QAJ257FG3JEXSXS74BDP",
+    "username": "sephiroth"
+  },
+  {
+    "phones": [
+      {
+        "name": "",
+        "phone_id": "redxiii_phone_1",
+        "platform": "Apple iOS"
+      }
+    ],
+    "user_id": "HDGKDLJNAYBEC74JHXQJ",
+    "username": "redxiii"
+  },
+  {
+    "phones": [
+      {
+        "name": "91720708648",
+        "phone_id": "tifa_phone_1",
+        "platform": "Generic Smartphone"
+      }
+    ],
+    "user_id": "4KBX3XC8833HPXZT4Q74",
+    "username": "tifa"
+  }
+]

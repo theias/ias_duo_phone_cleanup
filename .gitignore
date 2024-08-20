@@ -1,3 +1,16 @@
+*.egg-info/
+*.swo
 *.swp
+<<<<<<< HEAD
 credentials.ini
 *.log
+=======
+*pyc
+__pycache__/
+.mypy_cache/
+.pytest_cache
+build/
+dist*/
+venv/
+virtualenv/
+>>>>>>> refactored
