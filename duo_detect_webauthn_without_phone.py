@@ -1,4 +1,4 @@
-#!/usr/bin/env -S /usr/bin/python -Wall -Wignore::DeprecationWarning
+#!/usr/bin/env -S /usr/bin/python3 -Wall -Wignore::DeprecationWarning
 """
 Detect webauthn users without phones
 """

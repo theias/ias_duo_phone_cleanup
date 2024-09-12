@@ -2,7 +2,7 @@
 *.swo
 *.swp
 <<<<<<< HEAD
-credentials.ini
+credentials.*
 *.log
 =======
 *pyc
