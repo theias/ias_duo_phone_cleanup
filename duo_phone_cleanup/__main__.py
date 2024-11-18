@@ -189,7 +189,7 @@ class Duo:
                     "been able to connect, or the credentials may be incorrect. "
                 ),
             )
-            raise err
+            sys.exit(1)
         logging.info("%d users fetched from Duo", len(self.users))  # type:ignore
         logging.debug(
             "users fetched from Duo: `%s`", [u["username"] for u in self.users]
