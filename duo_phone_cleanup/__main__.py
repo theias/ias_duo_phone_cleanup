@@ -276,7 +276,7 @@ def user_verify(prompt) -> str:
 
 
 def main(
-    argv,
+    argv: list = sys.argv[1:],
 ) -> None:
     """main"""
     args = parse_args(argv)
