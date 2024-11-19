@@ -280,7 +280,12 @@ def main(
 ) -> None:
     """main"""
     args = parse_args(argv)
-    logging.debug("Argparse results: %s", args)
+    args_redacted: Dict[str, Any] = {
+        # Redact the secret key
+        k: f"{v[0]}{'*'*len(v)}{v[-1]}" if k == "skey" else v
+        for k, v in vars(args).items()
+    }
+    logging.debug("Argparse results: %s", args_redacted)
     logging.info(
         "Will use the field `%s` to check/store timestamps for phones",
         PHONE_TIMESTAMP_KEY,
