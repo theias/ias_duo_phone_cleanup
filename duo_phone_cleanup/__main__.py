@@ -180,7 +180,7 @@ class Duo:
         logging.info("Fetching user list from Duo API")
         try:
             self.users: Iterable = self.api.get_users()
-        except Exception as err:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except
             # The Duo module barely handles its own exceptions so we have
             # little choice here
             logging.error(
