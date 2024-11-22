@@ -8,6 +8,8 @@ import logging
 import os
 import sys
 from datetime import datetime, timedelta
+from collections import defaultdict
+from enum import Enum, auto
 from typing import Any, Callable, Dict, Iterable, List
 
 import duo_client  # type:ignore
@@ -159,6 +161,14 @@ def parse_args(argv=None) -> argparse.Namespace:
     return args
 
 
+class ProcessPhoneResult(Enum):
+    """Results from duo phone update"""
+
+    TIMESTAMPED = auto()
+    REMOVED = auto()
+    NO_ACTION = auto()
+
+
 # pylint: disable=too-few-public-methods
 class Duo:
     """
@@ -208,7 +218,7 @@ class Duo:
         *,
         phone: Dict[str, Any],
         time_cutoff: datetime,
-    ) -> None:
+    ) -> ProcessPhoneResult:
         """
         Remove a phone if its timestamp is old enough, else create the timestamp
 
@@ -241,7 +251,8 @@ class Duo:
                 phone_id=phone["phone_id"],
                 name=str(round(datetime.timestamp(datetime.utcnow()))),
             )
-        elif created_time < time_cutoff and pre_test(
+            return ProcessPhoneResult.TIMESTAMPED
+        if created_time < time_cutoff and pre_test(
             f'Remove {phone["username"]}\'s phone `{phone["phone_id"]}`?'
         ):
             # Else if the phone was timestamped with a value before our grace
@@ -252,12 +263,13 @@ class Duo:
                 phone["phone_id"],
             )
             self.api.delete_phone(phone["phone_id"])
-        else:
-            logging.debug(
-                ("Taking no action on phone for the user `%s` with id `%s`"),
-                phone["username"],
-                phone["phone_id"],
-            )
+            return ProcessPhoneResult.REMOVED
+        logging.debug(
+            ("Taking no action on phone for the user `%s` with id `%s`"),
+            phone["username"],
+            phone["phone_id"],
+        )
+        return ProcessPhoneResult.NO_ACTION
 
 
 # pylint: enable=too-few-public-methods
@@ -292,6 +304,8 @@ def main(
     )
     # Retrieve user info from API:
     duo: Duo = Duo(ikey=args.ikey, skey=args.skey, host=args.host)
+    processed: defaultdict = defaultdict(int)
+    res: ProcessPhoneResult
     # Operate on phones where appropriate
     for phone in duo.phones:
         if args.users and phone["username"] not in args.users:
@@ -311,17 +325,26 @@ def main(
                 minutes=int(args.grace_period)
             )
             if args.force:
-                duo.process_phone(phone=phone, time_cutoff=grace_period_time)
+                res = duo.process_phone(phone=phone, time_cutoff=grace_period_time)
+                processed[res] += 1
             else:
-                duo.process_phone(
+                res = duo.process_phone(
                     phone=phone, time_cutoff=grace_period_time, pre_test=user_verify
                 )
+            processed[res] += 1
         else:
             logging.debug(
                 "Phone `%s` for user `%s` not `Generic Smartphone`, taking no action",
                 phone["phone_id"],
                 phone["username"],
             )
+            processed[ProcessPhoneResult.NO_ACTION] += 1
+    logging.info(
+        "Processing complete. {timestamped: %s, removed: %s, no_action: %s",
+        processed[ProcessPhoneResult.TIMESTAMPED],
+        processed[ProcessPhoneResult.REMOVED],
+        processed[ProcessPhoneResult.NO_ACTION],
+    )
 
 
 if __name__ == "__main__":
